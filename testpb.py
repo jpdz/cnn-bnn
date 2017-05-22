@@ -1,5 +1,5 @@
-from inputdata import *
-from Gates import Gates
+from utils.inputdata import *
+from utils.Gates import Gates
 
 
 pbfile = "model.pb"
