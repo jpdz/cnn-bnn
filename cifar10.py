@@ -53,7 +53,7 @@ if __name__ == "__main__":
     print("epsilon = "+str(epsilon))
     
     # Training parameters
-    num_epochs = 1
+    num_epochs = 50
     print("num_epochs = "+str(num_epochs))
     
     # BinaryConnect    
