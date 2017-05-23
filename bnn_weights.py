@@ -217,17 +217,18 @@ if __name__ == "__main__":
     # store the weights value and bias value of each binaryDenselayer 
     from six.moves import cPickle as pickle
     print (lasagne.layers.get_all_params(mlp))
-    W1 = lasagne.layers.get_all_param_values(mlp)[0]
-    W2 = lasagne.layers.get_all_param_values(mlp)[6]
-    W3 = lasagne.layers.get_all_param_values(mlp)[12]
-    W4 = lasagne.layers.get_all_param_values(mlp)[18]
-    B1 = lasagne.layers.get_all_param_values(mlp)[1]
-    B2 = lasagne.layers.get_all_param_values(mlp)[7]
-    B3 = lasagne.layers.get_all_param_values(mlp)[13]
-    B4 = lasagne.layers.get_all_param_values(mlp)[19]
+    para = lasagne.layers.get_all_param_values(mlp)
+    weights = []
+    means = []
+    stds = []
+    for i in range(0, 24, 6):
+        weights.append(para[i])
+        means.append(para[i+2])
+        stds.append(para[i+3])
+
 
     # save the values to a pickle file in order to construct thr model of tensorflow framework
-    save = [W1,W2,W3,W4,B1,B2,B3,B4]
-    pickle_files = "weights3.pickle"
+    save = {"weights": weights, "means": means, "invars": stds}
+    pickle_files = "mnist_bnn_paras.pkl"
     with open(pickle_files, 'wb') as f:
         pickle.dump(save, f, pickle.HIGHEST_PROTOCOL)
