@@ -21,7 +21,7 @@ valid_images=gates.valid.X
 
 
 # weights trained from Lasagne
-pickle_file_train = "mnis_bnn_paras.pkl"
+pickle_file_train = "mnist_bnn_paras.pkl"
 
 with open(pickle_file_train, 'rb') as f:
 	v=pickle.load(f)
@@ -29,13 +29,19 @@ with open(pickle_file_train, 'rb') as f:
 x  = tf.placeholder(tf.float32, shape=[None, 28, 28], name = "input")
 y_ = tf.placeholder(tf.float32, [None, 7])
 
+def binarize(W):
+    W = np.clip((W+1.)/2.,0,1)
+    W = np.round(W)
+    W = W * 2 - 1
+    return W.astype(np.float32)
+
 # Deterministic BinaryConnect (round to nearest)
 def binaryDenselayer(inputs, w):
     inputs = tf.matmul(inputs, w)
     return inputs
 
 def batchNormlayer(inputs, mean, invar, name="identity"): 
-    inputs = (inputs-mean)*invar
+    inputs = (inputs-mean)/invar
     if name=="rectify":
         inputs = tf.maximum(inputs,0.0)    
     return inputs
@@ -51,6 +57,11 @@ def model(inputs, weigths, means, invars):
     inputs = tf.nn.softmax(inputs, name="output")
     return inputs
 
+weights = []
+for w in v['weights']:
+    weights.append(binarize(w))
+
+v['weights'] = weights
 
 # Construct model
 y = model(x, v['weights'], v['means'], v['invars']) 
