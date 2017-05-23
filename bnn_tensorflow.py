@@ -41,7 +41,8 @@ def binaryDenselayer(inputs, w):
     return inputs
 
 def batchNormlayer(inputs, mean, invar, name="identity"): 
-    inputs = (inputs-mean)/invar
+    invar2 = tf.rsqrt(invar)
+    inputs = (inputs-mean)*invar2
     if name=="rectify":
         inputs = tf.maximum(inputs,0.0)    
     return inputs
